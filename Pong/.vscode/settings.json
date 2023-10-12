@@ -58,6 +58,7 @@
     },
     "dotnet.defaultSolution": "Pong.sln",
     "cSpell.words": [
+        "Dont",
         "Rigidbody",
         "Scriptable"
     ]

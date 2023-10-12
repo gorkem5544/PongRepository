@@ -17,7 +17,6 @@ public class MoveWithTranslate : IMover
         {
             return;
         }
-
         _playerController.transform.Translate(Vector2.up * direction * Time.deltaTime * moveSpeed);
         float yBoundary = Math.Clamp(_playerController.transform.position.y, -3, 3);
         _playerController.transform.position = new Vector3(_playerController.transform.position.x, yBoundary, 0);

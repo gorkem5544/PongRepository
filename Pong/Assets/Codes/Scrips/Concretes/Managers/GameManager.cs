@@ -1,51 +1,67 @@
 using System.Collections;
+
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : SingletonDontDestroyMono<GameManager>
 {
-    public static GameManager Instance { get; private set; }
-    public int Score = 0;
-    public System.Action<int> OnScoreChanged;
-    public bool GameStarted = false;
+    public enum EnumGameState
+    {
+        Menu, GameStarting, Game, GameWin, GameOver
+    }
+
+
+
+
+    public EnumGameState GameState { get; set; }
+
 
     [SerializeField] PlayerController _playerController;
-    Vector2 _playerStartingPosition, _ballStartingPosition, _enemyStartingPosition;
+    IPlayerController PlayerController => _playerController;
+
     [SerializeField] BallController _ballController;
-    private void Awake()
+
+    LaunchingBall _launchingBall;
+    protected override void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(this.gameObject);
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
+        base.Awake();
+        _launchingBall = new LaunchingBall(_ballController);
     }
     private void Start()
     {
-        _playerStartingPosition = _playerController.transform.position;
-        _ballStartingPosition = _ballController.transform.position;
+        GameState = EnumGameState.Menu;
+        Debug.Log(PlayerController.PlayerInput + "+++" + _playerController + "+++" + _playerController.PlayerInput);
     }
 
-
-
-    public void RestartAllObjects()
+    private void Update()
     {
-        _playerController.transform.position = _playerStartingPosition;
-        _ballController.transform.position = _ballStartingPosition;
+        switch (GameState)
+        {
+            case EnumGameState.Menu:
+                LevelManager.Instance.RestartAllObjectsTransform();
+                /*if (PlayerController.PlayerInput.MouseClick)
+                {
+                    GameState = EnumGameState.GameStarting;
+                }*/
+                break;
+            case EnumGameState.GameStarting:
+                _launchingBall.LaunchBall();
+                GameState = EnumGameState.Game;
+                break;
+            case EnumGameState.Game:
+                break;
+            case EnumGameState.GameWin:
+                LevelManager.Instance.RestartAllObjectsTransform();
+                break;
 
-        _ballController.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-        GameStarted = false;
+            case EnumGameState.GameOver:
+                LevelManager.Instance.RestartAllObjectsTransform();
+                break;
+        }
+        Debug.Log(GameState);
     }
-    public void IncreaseScore(int amount)
-    {
-        Score += amount;
 
-        OnScoreChanged?.Invoke(Score);
 
-    }
+
 
 }
