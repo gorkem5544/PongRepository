@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &7827181365415835000
+--- !u!1 &9204283951204131793
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,41 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7827181365415835002}
-  - component: {fileID: 7827181365415835001}
+  - component: {fileID: 9204283951204131790}
+  - component: {fileID: 9204283951204131791}
   m_Layer: 0
-  m_Name: '[GameManager]'
+  m_Name: '[ScoreManager]'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7827181365415835002
+--- !u!4 &9204283951204131790
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7827181365415835000}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.3011359, y: -0.09535034, z: 0.48386365}
+  m_GameObject: {fileID: 9204283951204131793}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.7899279, y: 0.05479282, z: 0.5146999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7827181365415835001
+--- !u!114 &9204283951204131791
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7827181365415835000}
+  m_GameObject: {fileID: 9204283951204131793}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7db140fa02ea25c41a8ab6d33e9a794c, type: 3}
+  m_Script: {fileID: 11500000, guid: 29aca1212a3a42140bf498f1ada51143, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerController: {fileID: 1769587165601792080, guid: 67dab17cf53acb145b8f09a78c3d1552, type: 3}
-  _ballController: {fileID: 8874073466068746531, guid: c1a494a81e78d404d999b1d1025774ff, type: 3}
+  Score: 0

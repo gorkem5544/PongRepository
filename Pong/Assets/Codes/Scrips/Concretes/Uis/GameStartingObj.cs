@@ -7,7 +7,10 @@ public class GameStartingObj : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI _gameStartingInfoText;
 
-   
+    private void Awake()
+    {
+
+    }
     public void DeActiveGameStartingInfoText()
     {
         if (_gameStartingInfoText.gameObject.activeSelf == true)

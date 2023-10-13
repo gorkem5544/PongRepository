@@ -1,33 +1,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Concretes.Combats;
 using UnityEngine;
 
-namespace Concretes.Uis
+public class GameOverObj : MonoBehaviour
 {
-    public class GameOverObj : MonoBehaviour
+    [SerializeField] GameObject _gameOverPanel;
+    [SerializeField] LossArea _lossArea;
+    private void Awake()
     {
-        [SerializeField] GameObject _gameOverPanel;
-        [SerializeField] LossArea _lossArea;
-        private void Awake()
+        if (_gameOverPanel.activeSelf == true)
         {
-            if (_gameOverPanel.activeSelf == true)
-            {
-                _gameOverPanel.SetActive(false);
-            }
-
+            _gameOverPanel.SetActive(false);
         }
 
-        private void Start()
-        {
-            _lossArea.OnLoss += HandleOnGameLoss;
-        }
-
-        private void HandleOnGameLoss()
-        {
-            _gameOverPanel.SetActive(true);
-        }
     }
 
+    private void Start()
+    {
+        _lossArea.OnLoss += HandleOnGameLoss;
+    }
+
+    private void HandleOnGameLoss()
+    {
+        _gameOverPanel.SetActive(true);
+    }
 }

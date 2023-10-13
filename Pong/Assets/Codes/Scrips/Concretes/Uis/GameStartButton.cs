@@ -1,18 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using Abstracts.Uis;
 using UnityEngine;
 
-namespace Concretes.Uis
+public class GameStartButton : BaseButton
 {
-    public class GameStartButton : BaseButton
+    public override void HandleOnButtonClicked()
     {
-        public override void HandleOnButtonClicked()
-        {
-
-            GameManager.Instance.LoadLevel("Game");
-        }
-
+        GameManager.Instance.GameState = GameManager.EnumGameState.Menu;
+        LevelManager.Instance.LoadLevel("Game");
     }
 
 }
