@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class BaseButton : MonoBehaviour
+namespace Abstracts.Uis
+{
+    public abstract class BaseButton : MonoBehaviour
 {
     [SerializeField] Button _button;
     private void OnEnable()
@@ -15,4 +17,6 @@ public abstract class BaseButton : MonoBehaviour
         _button.onClick.RemoveListener(HandleOnButtonClicked);
     }
     public abstract void HandleOnButtonClicked();
+}
+
 }

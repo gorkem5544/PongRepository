@@ -1,36 +1,49 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Abstracts.Controllers;
+using Abstracts.Movements;
+using Concretes.Combats;
+using Concretes.Inputs;
+using Concretes.Movements;
+using Concretes.ScripTableObject;
 using UnityEngine;
 
 
-public class PlayerController : MonoBehaviour, IPlayerController
+namespace Concretes.Controllers
 {
-
-    LaunchingBall _launchingBall;
-
-    IMover _mover;
-    public IMover Mover => _mover;
-
-    [SerializeField] PlayerSO _playerSO;
-    public IPlayerSO PlayerSO => _playerSO;
-
-    IPlayerInput _playerInput;
-    public IPlayerInput PlayerInput => _playerInput;
-
-    [SerializeField] BallController _ballController;
-    public BallController BallController => _ballController;
-
-    private void Awake()
+    public class PlayerController : MonoBehaviour, IPlayerController
     {
-        //_launchingBall = new LaunchingBall(this);
-        _playerInput = new PlayerInput();
-        _mover = new MoveWithTranslate(this);
 
+
+        IMover _mover;
+        [SerializeField] PlayerSO _playerSO;
+        IPlayerInput _playerInput;
+        [SerializeField] BallController _ballController;
+        LaunchingBall _launchingBall;
+
+        private void Awake()
+        {
+            _launchingBall = new LaunchingBall(_ballController);
+            _playerInput = new PlayerInput();
+            _mover = new MoveWithTranslate(this);
+
+        }
+
+
+        private void Update()
+        {
+
+            if (_playerInput.MouseClick && !GameManager.Instance.GameStarting)
+            {
+                GameManager.Instance.GameStarting = true;
+                _launchingBall.LaunchBall();
+            }
+        }
+        private void FixedUpdate()
+        {
+            _mover.MoveTick(_playerInput.VerticalInput, _playerSO.MoveSpeed);
+        }
     }
 
-    private void FixedUpdate()
-    {
-        _mover.MoveTick(_playerInput.VerticalInput, _playerSO.MoveSpeed);
-
-    }
 }

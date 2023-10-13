@@ -2,66 +2,34 @@ using System.Collections;
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : SingletonDontDestroyMono<GameManager>
 {
-    public enum EnumGameState
+    public bool GameStarting { get; set; }
+
+    public int Score = 0;
+    public System.Action<int> OnScoreChanged;
+
+
+
+    public void IncreaseScore(int amount)
     {
-        Menu, GameStarting, Game, GameWin, GameOver
+        Score += amount;
+        GameStarting = false;
+        OnScoreChanged?.Invoke(Score);
     }
-
-
-
-
-    public EnumGameState GameState { get; set; }
-
-
-    [SerializeField] PlayerController _playerController;
-    IPlayerController PlayerController => _playerController;
-
-    [SerializeField] BallController _ballController;
-
-    LaunchingBall _launchingBall;
-    protected override void Awake()
+    public void LoadLevel(string levelName)
     {
-        base.Awake();
-        _launchingBall = new LaunchingBall(_ballController);
+        GameStarting = false;
+        StartCoroutine(LoadLevelAsync(levelName));
     }
-    private void Start()
+    IEnumerator LoadLevelAsync(string levelName)
     {
-        GameState = EnumGameState.Menu;
-        Debug.Log(PlayerController.PlayerInput + "+++" + _playerController + "+++" + _playerController.PlayerInput);
+        yield return SceneManager.LoadSceneAsync(levelName);
     }
-
-    private void Update()
+    public void ExitGame()
     {
-        switch (GameState)
-        {
-            case EnumGameState.Menu:
-                LevelManager.Instance.RestartAllObjectsTransform();
-                /*if (PlayerController.PlayerInput.MouseClick)
-                {
-                    GameState = EnumGameState.GameStarting;
-                }*/
-                break;
-            case EnumGameState.GameStarting:
-                _launchingBall.LaunchBall();
-                GameState = EnumGameState.Game;
-                break;
-            case EnumGameState.Game:
-                break;
-            case EnumGameState.GameWin:
-                LevelManager.Instance.RestartAllObjectsTransform();
-                break;
-
-            case EnumGameState.GameOver:
-                LevelManager.Instance.RestartAllObjectsTransform();
-                break;
-        }
-        Debug.Log(GameState);
+        Application.Quit();
     }
-
-
-
-
 }

@@ -44,5 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7db140fa02ea25c41a8ab6d33e9a794c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerController: {fileID: 1769587165601792080, guid: 67dab17cf53acb145b8f09a78c3d1552, type: 3}
-  _ballController: {fileID: 8874073466068746531, guid: c1a494a81e78d404d999b1d1025774ff, type: 3}
+  Score: 0

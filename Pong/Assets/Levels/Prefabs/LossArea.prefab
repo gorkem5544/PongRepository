@@ -71,3 +71,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56fc4c5233b9a1e4eb5c633fda8a3f5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerController: {fileID: 0}
+  _enemyController: {fileID: 0}
+  _ballController: {fileID: 0}

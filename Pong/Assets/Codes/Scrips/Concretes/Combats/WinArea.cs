@@ -1,17 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using Abstracts.Combats;
+using Concretes.Controllers;
 using UnityEngine;
 
-public class WinArea : MonoBehaviour
+namespace Concretes.Combats
 {
-    private void OnTriggerEnter2D(Collider2D other)
+    public class WinArea : BaseArea
     {
-        BallController ballController = other.gameObject.GetComponent<BallController>();
-        if (ballController != null)
+        public event System.Action OnWin;
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            GameManager.Instance.GameState = GameManager.EnumGameState.GameWin;
-
-            ScoreManager.Instance.IncreaseScore(1);
+            BallController ballController = other.gameObject.GetComponent<BallController>();
+            if (ballController != null)
+            {
+                OnWin?.Invoke();
+                RestartAllObjectTransform();
+                GameManager.Instance.IncreaseScore(1);
+            }
         }
     }
+
 }

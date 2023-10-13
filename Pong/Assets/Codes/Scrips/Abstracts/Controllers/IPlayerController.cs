@@ -1,11 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using Abstracts.Movements;
+using Concretes.Combats;
+using Concretes.Controllers;
+using Concretes.Inputs;
 using UnityEngine;
 
-public interface IPlayerController : IEntityController
+namespace Abstracts.Controllers
 {
-    IMover Mover { get; }
-    IPlayerSO PlayerSO { get; }
-    IPlayerInput PlayerInput { get; }
-    BallController BallController{get;}
+    public interface IPlayerController : IEntityController
+    {
+
+
+    }
+
 }

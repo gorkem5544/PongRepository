@@ -6,10 +6,14 @@ public interface IPlayerSO
 {
     float MoveSpeed { get; }
 }
-[CreateAssetMenu(fileName ="Player Information",menuName ="Player Data/Create new Player Data")]
-public class PlayerSO : ScriptableObject, IPlayerSO
+namespace Concretes.ScripTableObject
 {
-    [SerializeField] float _moveSpeed;
-    public float MoveSpeed => _moveSpeed;
+    [CreateAssetMenu(fileName = "Player Information", menuName = "Player Data/Create new Player Data")]
+    public class PlayerSO : ScriptableObject, IPlayerSO
+    {
+        [SerializeField] float _moveSpeed;
+        public float MoveSpeed => _moveSpeed;
+
+    }
 
 }

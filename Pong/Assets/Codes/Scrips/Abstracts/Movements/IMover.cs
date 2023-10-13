@@ -2,7 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IMover
+namespace Abstracts.Movements
 {
-    void MoveTick(float direction,float moveSpeed);
+    public interface IMover
+    {
+        void MoveTick(float direction, float moveSpeed);
+    }
+
 }

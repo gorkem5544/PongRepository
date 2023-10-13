@@ -4,22 +4,26 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ScoreText : MonoBehaviour
+namespace Concretes.Uis
 {
-
-    [SerializeField] TextMeshProUGUI _scoreText;
-    private void Start()
+    public class ScoreText : MonoBehaviour
     {
-        ScoreManager.Instance.OnScoreChanged += HandleOnScoreChanged;
-    }
-    private void OnDisable()
-    {
-        ScoreManager.Instance.OnScoreChanged -= HandleOnScoreChanged;
 
+        [SerializeField] TextMeshProUGUI _scoreText;
+        private void Start()
+        {
+            GameManager.Instance.OnScoreChanged += HandleOnScoreChanged;
+        }
+        private void OnDisable()
+        {
+            GameManager.Instance.OnScoreChanged -= HandleOnScoreChanged;
+
+        }
+
+        private void HandleOnScoreChanged(int obj)
+        {
+            _scoreText.text = obj.ToString();
+        }
     }
 
-    private void HandleOnScoreChanged(int obj)
-    {
-        _scoreText.text = obj.ToString();
-    }
 }

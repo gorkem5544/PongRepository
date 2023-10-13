@@ -1,17 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using Abstracts.Combats;
+using Concretes.Controllers;
 using UnityEngine;
 
-public class LossArea : MonoBehaviour
+namespace Concretes.Combats
 {
-    public event System.Action OnLoss;
-    private void OnTriggerEnter2D(Collider2D other)
+    public class LossArea : BaseArea
     {
-        BallController ballController = other.gameObject.GetComponent<BallController>();
-        if (ballController != null)
+        public event System.Action OnLoss;
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            GameManager.Instance.GameState=GameManager.EnumGameState.GameOver;
-            OnLoss?.Invoke();
+            BallController ballController = other.gameObject.GetComponent<BallController>();
+            if (ballController != null)
+            {
+                RestartAllObjectTransform();
+                OnLoss?.Invoke();
+            }
         }
     }
+
 }
