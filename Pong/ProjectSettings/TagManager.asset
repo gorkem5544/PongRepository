@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - PlayerGoal
+  - Ball
+  - FxTemporaire
+  - GameWinParticle
   layers:
   - Default
   - TransparentFX
