@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Combats.Concretes;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Abstracts;
-using Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.OtherControllers;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Inputs.Abstracts;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Inputs.Concretes;
+using Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Abstracts;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Concretes;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Movements.Abstracts;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Movements.Concretes;
+using Assembly_CSharp.Assets.GameFolders.Scripts.ScriptableObjects.Concretes.PlayerScriptableObjects;
 using UnityEngine;
 
 
@@ -15,29 +16,31 @@ namespace Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.Playe
 {
     public class PlayerController : MonoBehaviour, IPlayerController
     {
-        private const string BallObjTag = "Ball";
         LaunchingBall _launchingBall;
+        IPlayerMover _mover;
 
-        IMover _mover;
-        public IMover Mover => _mover;
 
-        [SerializeField] PlayerSO _playerSO;
-        public IPlayerSO PlayerSO => _playerSO;
+        [SerializeField] PlayerSettings _playerSO;
+        public PlayerSettings PlayerSO => _playerSO;
 
         IPlayerInput _playerInput;
         public IPlayerInput PlayerInput => _playerInput;
 
-        public BallController BallController { get; set; }
+        private IBallController _ballController;
+        public IBallController BallController => _ballController;
+        private IScoreManager _playerScoreManager;
+        public IScoreManager PlayerScoreManager => _playerScoreManager;
 
+        const int PlayerInfo = 1;
+        public int Info => PlayerInfo;
 
-        private bool _canLaunch, _isGameStarting;
         private void Awake()
         {
-            BallController = SpawnerManager.Instance.NewBallController;
-            //BallController = GameObject.FindWithTag(BallObjTag).GetComponent<BallController>();
-            _launchingBall = new LaunchingBall(BallController);
+            _playerScoreManager = new ScoreManager();
+            _ballController = SpawnerManager.Instance.NewBallController;
+            _launchingBall = new LaunchingBall(this);
             _playerInput = new PlayerInput();
-            _mover = new MoveWithTranslate(this);
+            _mover = new PlayerMover(this);
         }
 
         private void Update()
@@ -45,8 +48,8 @@ namespace Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.Playe
             if (_playerInput.MouseClick && GameManager.Instance.GameState == GameManager.GameManagerStateEnum.GameStarting)
             {
                 GameManager.Instance.GameState = GameManager.GameManagerStateEnum.LaunchBall;
-
             }
+            _mover.MoveUpdate();
         }
         private void FixedUpdate()
         {
@@ -55,7 +58,7 @@ namespace Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.Playe
                 _launchingBall.LaunchBallAction();
                 GameManager.Instance.GameState = GameManager.GameManagerStateEnum.Game;
             }
-            _mover.MoveTick(_playerInput.VerticalInput, _playerSO.MoveSpeed);
+            _mover.FixedUpdate();
 
         }
     }

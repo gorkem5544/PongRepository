@@ -17,52 +17,30 @@ namespace Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Concretes
     {
         public enum GameManagerStateEnum
         {
-            Menu, GameStarting, LaunchBall, Game, GameWin, GameOver, GameRestart, ReturnMenu
+            Menu, GameStarting, LaunchBall, Game, GameWin, GameOver, GameRestart
         }
         IStateMachine _stateMachine;
         public GameManagerStateEnum GameState { get; set; }
-        public bool IsGameStarting { get; set; }
-
-
-
-
-
-        [SerializeField] PlayerController _playerController;
-        IPlayerController PlayerController => _playerController;
-
-        [SerializeField] BallController _ballController;
-
-        LaunchingBall _launchingBall;
-        Vector2 _playerStartingPosition, _ballStartingPosition, _enemyStartingPosition;
-
-        public Vector2 PlayerStartingPosition { get => _playerStartingPosition; set => _playerStartingPosition = value; }
-        public Vector2 BallStartingPosition { get => _ballStartingPosition; set => _ballStartingPosition = value; }
-        public Vector2 EnemyStartingPosition { get => _enemyStartingPosition; set => _enemyStartingPosition = value; }
-
-        public bool _isGameSTarting;
 
         protected override void Awake()
         {
             base.Awake();
-            _launchingBall = new LaunchingBall(_ballController);
             _stateMachine = new StateMachine();
         }
+
         private void Start()
         {
             GameState = GameManagerStateEnum.Menu;
-            PlayerStartingPosition = new Vector2(-7, 0);
-            BallStartingPosition = Vector2.zero;
-            _enemyStartingPosition = new Vector2(7, 0);
-
+            Application.targetFrameRate = 1000;
             GameManagerGameMenuState gameManagerGameMenuState = new GameManagerGameMenuState();
             GameManagerLaunchBallState gameManagerLaunchBallState = new GameManagerLaunchBallState();
             GameManagerGameStartingState gameManagerGameStartingState = new GameManagerGameStartingState();
             GameManagerGameState gameManagerGameState = new GameManagerGameState();
+
             GameManagerGameWinState gameManagerGameWinState = new GameManagerGameWinState();
             GameManagerGameOverState gameManagerGameOverState = new GameManagerGameOverState();
 
             GameManagerGameRestartState gameManagerGameRestartState = new GameManagerGameRestartState();
-            GameManagerReturnMenuState gameManagerReturnMenuState = new GameManagerReturnMenuState();
 
 
             _stateMachine.SetState(gameManagerGameMenuState);
@@ -73,18 +51,16 @@ namespace Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Concretes
             _stateMachine.AddTransition(gameManagerGameState, gameManagerGameOverState, () => GameState == GameManagerStateEnum.GameOver);
             _stateMachine.AddTransition(gameManagerGameState, gameManagerGameWinState, () => GameState == GameManagerStateEnum.GameWin);
 
+            _stateMachine.AddTransition(gameManagerGameWinState, gameManagerGameStartingState, () => GameState == GameManagerStateEnum.GameStarting);
+            _stateMachine.AddTransition(gameManagerGameWinState, gameManagerGameRestartState, () => GameState == GameManagerStateEnum.GameRestart);
 
-            _stateMachine.AddAnyState(gameManagerReturnMenuState, () => GameState == GameManagerStateEnum.ReturnMenu);
-            _stateMachine.AddAnyState(gameManagerGameRestartState, () => GameState == GameManagerStateEnum.GameRestart);
-
-            _stateMachine.AddTransition(gameManagerReturnMenuState, gameManagerGameMenuState, () => GameState == GameManagerStateEnum.Menu);
+            _stateMachine.AddTransition(gameManagerGameOverState, gameManagerGameRestartState, () => GameState == GameManagerStateEnum.GameRestart);
             _stateMachine.AddTransition(gameManagerGameRestartState, gameManagerGameStartingState, () => GameState == GameManagerStateEnum.GameStarting);
 
 
 
 
         }
-
         private void Update()
         {
             _stateMachine.Update();
@@ -93,153 +69,143 @@ namespace Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Concretes
         {
             _stateMachine.FixedUpdate();
         }
-
-
-
-
     }
 
 }
 
 public class GameManagerGameMenuState : IState
 {
+    private const string GameName = "Game";
     public void Enter()
     {
-
     }
 
     public void Exit()
     {
-
+        LevelManager.Instance.LoadLevel(GameName);
     }
 
     public void FixedUpdate()
     {
-
     }
 
     public void Update()
     {
-        Debug.Log("menu");
     }
 }
 public class GameManagerLaunchBallState : IState
 {
     public void Enter()
     {
-        Debug.Log("Lauınh");
     }
 
     public void Exit()
     {
-
     }
 
     public void FixedUpdate()
     {
-
     }
 
     public void Update()
     {
-        Debug.Log("Lauınh");
-
     }
 }
 public class GameManagerGameStartingState : IState
 {
     public void Enter()
     {
-        Debug.Log("Game Starting");
+        UiManager.Instance.CanTimeWork = false;
     }
 
     public void Exit()
     {
-        Debug.Log("Game Starting Exit");
-
     }
 
     public void FixedUpdate()
     {
-        Debug.Log("Game Starting Fixe");
-
     }
 
     public void Update()
     {
-        Debug.Log("Game Starting Update");
-
     }
 }
 public class GameManagerGameState : IState
 {
     public void Enter()
     {
-        Debug.Log("Game enter");
+        UiManager.Instance.CanTimeWork = true;
+
     }
 
     public void Exit()
     {
-        Debug.Log("Game  Exit");
-
     }
 
     public void FixedUpdate()
     {
-        Debug.Log("Game  Fixe");
-
     }
 
     public void Update()
     {
-        Debug.Log("Game  Update");
-
     }
 }
 public class GameManagerGameWinState : IState
 {
+    float _currentTime = 0;
     public void Enter()
     {
-        Debug.Log("Win");
+        UiManager.Instance.CanTimeWork = false;
+        ParticleManager.Instance.EntityGoalParticleStart();
+        SpawnerManager.Instance.NewPlayerController.PlayerScoreManager.AddScore(1);
     }
 
     public void Exit()
     {
-
+        _currentTime = 0;
+        SpawnerManager.Instance.RestartAllObjectsTransform();
     }
 
     public void FixedUpdate()
     {
-
     }
 
     public void Update()
     {
-        Debug.Log("win");
-
+        _currentTime += Time.deltaTime;
+        if (_currentTime > 3)
+        {
+            GameManager.Instance.GameState = GameManager.GameManagerStateEnum.GameRestart;
+        }
     }
 }
 public class GameManagerGameOverState : IState
 {
+    float _currentTime = 0;
     public void Enter()
     {
-        Debug.Log("over");
+        ParticleManager.Instance.EntityGoalParticleStart();
+        SpawnerManager.Instance.NewEnemyController.EnemyScoreManager.AddScore(1);
+        UiManager.Instance.CanTimeWork = false;
     }
 
     public void Exit()
     {
-
+        _currentTime = 0;
+        SpawnerManager.Instance.RestartAllObjectsTransform();
     }
 
     public void FixedUpdate()
     {
-
     }
 
     public void Update()
     {
-        Debug.Log("over");
-
+        _currentTime += Time.deltaTime;
+        if (_currentTime > 3)
+        {
+            GameManager.Instance.GameState = GameManager.GameManagerStateEnum.GameRestart;
+        }
     }
 }
 public class GameManagerGameRestartState : IState
@@ -247,46 +213,19 @@ public class GameManagerGameRestartState : IState
     public void Enter()
     {
         GameManager.Instance.GameState = GameManager.GameManagerStateEnum.GameStarting;
-        Debug.Log("Res");
+        SpawnerManager.Instance.RestartAllObjectsTransform();
+        UiManager.Instance.CanTimeWork = true;
     }
 
     public void Exit()
     {
-
     }
 
     public void FixedUpdate()
     {
-
     }
 
     public void Update()
     {
-        Debug.Log("Res");
-
-    }
-}
-public class GameManagerReturnMenuState : IState
-{
-    public void Enter()
-    {
-        Debug.Log("ReturnMenu");
-        GameManager.Instance.GameState = GameManager.GameManagerStateEnum.Menu;
-    }
-
-    public void Exit()
-    {
-
-    }
-
-    public void FixedUpdate()
-    {
-
-    }
-
-    public void Update()
-    {
-        Debug.Log("ReturnMenu");
-
     }
 }

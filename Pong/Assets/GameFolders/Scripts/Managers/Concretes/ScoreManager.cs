@@ -2,21 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Abstracts;
 using UnityEngine;
-
 namespace Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Concretes
 {
-    public class ScoreManager : SingletonDontDestroyMono<ScoreManager>
+    public class ScoreManager : IScoreManager
     {
-        public int Score = 0;
-        public System.Action<int> OnScoreChanged;
-        public void IncreaseScore(int amount)
+        private int _score;
+        public System.Action<int> OnScoreChanged { get; set; }
+        public void AddScore(int value = 1)
         {
-            Score += amount;
-            OnScoreChanged?.Invoke(Score);
-        }
-        public void ClearScore()
-        {
-            Score = 0;
+            _score += value;
+            OnScoreChanged?.Invoke(_score);
         }
     }
 

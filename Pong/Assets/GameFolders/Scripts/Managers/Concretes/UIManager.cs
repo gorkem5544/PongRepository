@@ -5,16 +5,9 @@ using UnityEngine;
 
 namespace Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Concretes
 {
-    public class UIManager : SingletonDontDestroyMono<UIManager>
+    public class UiManager : SingletonDontDestroyMono<UiManager>
     {
-        public event System.Action OnLossEvent;
-
-        public void OpenGameOverPanel()
-        {
-            OnLossEvent?.Invoke();
-        }
-
-
+        public bool CanTimeWork { get; set; }
     }
 
 }

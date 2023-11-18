@@ -1,55 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
+using Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.OtherControllers;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Abstracts;
+using Assembly_CSharp.Assets.GameFolders.Scripts.Pools.Concretes;
+using Assembly_CSharp.Assets.GameFolders.Scripts.Statics;
 using UnityEngine;
 
 namespace Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Concretes
 {
     public class ParticleManager : SingletonDontDestroyMono<ParticleManager>
     {
-        List<GameObject> _gameWinParticles = new List<GameObject>();
-        [SerializeField] GameObject _ballHitParticle;
-
-        private void Start()
-        {
-            StopAllParticle();
-        }
-        protected override void Awake()
-        {
-            base.Awake();
-            _gameWinParticles.Add(GameObject.FindGameObjectWithTag("GameWinParticle"));
-        }
-        private void OnEnable()
-        {
-            _gameWinParticles.Add(GameObject.FindGameObjectWithTag("GameWinParticle"));
-            GameWinParticleStop();
-        }
+        [SerializeField] BoxCollider2D _playerGoalRandomSpawnCollider;
 
 
-        public void BallHitParticleMethod(Vector2 pos)
+        public void BallHitParticleMethod(Vector2 spawnPosition)
         {
-            GameObject newBallHitParticle = Instantiate(_ballHitParticle, pos, Quaternion.identity);
+            ParticleController newBallHitParticle = BallHitPool.Instance.Get();
             newBallHitParticle.gameObject.SetActive(true);
-            Destroy(newBallHitParticle, 1f);
+            newBallHitParticle.transform.position = spawnPosition;
         }
-        public void GameWinParticleStart()
+
+        public void EntityGoalParticleStart()
         {
-            foreach (GameObject item in _gameWinParticles)
+            for (int i = 0; i < 4; i++)
             {
-                item.SetActive(true);
+                ParticleController newParticleController = EntityGoalParticlePool.Instance.Get();
+                newParticleController.gameObject.SetActive(true);
+                newParticleController.transform.position = Utils.GetRandomPoint(_playerGoalRandomSpawnCollider);
             }
         }
-        public void GameWinParticleStop()
-        {
-            StopAllParticle();
-        }
-        public void StopAllParticle()
-        {
-            foreach (GameObject item in _gameWinParticles)
-            {
-                item.SetActive(false);
-            }
-        }
+
+
     }
 
 }

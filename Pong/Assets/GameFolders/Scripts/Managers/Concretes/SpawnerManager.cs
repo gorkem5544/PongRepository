@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Abstracts;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.EnemyControllers;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.OtherControllers;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.PlayerControllers;
@@ -14,33 +15,39 @@ namespace Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Concretes
         [SerializeField] private PlayerController _playerController;
         [SerializeField] private EnemyController _enemyController;
 
-        public BallController NewBallController { get; set; }
-        public PlayerController NewPlayerController { get; set; }
-        public EnemyController NewEnemyController { get; set; }
+        public IBallController NewBallController { get; set; }
+        public IPlayerController NewPlayerController { get; set; }
+        public IEnemyController NewEnemyController { get; set; }
+
+        Vector2 _playerStartingPosition, _ballStartingPosition, _enemyStartingPosition;
+
+        private void Start()
+        {
+            _playerStartingPosition = new Vector2(-7, 0);
+            _ballStartingPosition = Vector2.zero;
+            _enemyStartingPosition = new Vector2(7, 0);
+        }
 
         public void SpawnAction()
         {
-            NewBallController = Instantiate(_ballController, GetPosition(GameManager.Instance.BallStartingPosition), Quaternion.identity) as BallController;
-            NewPlayerController = Instantiate(_playerController, GetPosition(GameManager.Instance.PlayerStartingPosition), Quaternion.identity) as PlayerController;
-            NewEnemyController = Instantiate(_enemyController, GetPosition(GameManager.Instance.EnemyStartingPosition), Quaternion.identity) as EnemyController;
+            NewBallController = Instantiate(_ballController, GetPosition(_ballStartingPosition), Quaternion.identity);
+            NewPlayerController = Instantiate(_playerController, GetPosition(_playerStartingPosition), Quaternion.identity);
+            NewEnemyController = Instantiate(_enemyController, GetPosition(_enemyStartingPosition), Quaternion.identity);
+        }
 
-
-
-            Debug.Log("Spawn Action");
+        public void RestartAllObjectsTransform()
+        {
+            NewBallController.Rigidbody2D.velocity = Vector2.zero;
+            NewPlayerController.transform.position = GetPosition(_playerStartingPosition);
+            NewBallController.transform.position = GetPosition(_ballStartingPosition);
+            NewEnemyController.transform.position = GetPosition(_enemyStartingPosition);
         }
         public Vector2 GetPosition(Vector2 vector)
         {
             return new Vector2(vector.x, vector.y);
         }
 
-        public void RestartAllObjectsTransform()
-        {
-            GameManager.Instance.IsGameStarting = false;
-            _ballController.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            _playerController.transform.position = new Vector3(GameManager.Instance.PlayerStartingPosition.x, GameManager.Instance.PlayerStartingPosition.y);
-            _ballController.transform.position = new Vector3(GameManager.Instance.BallStartingPosition.x, GameManager.Instance.BallStartingPosition.y);
-            _enemyController.transform.position = new Vector3(GameManager.Instance.EnemyStartingPosition.x, GameManager.Instance.EnemyStartingPosition.y);
-        }
+
     }
 
 }

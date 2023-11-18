@@ -19,9 +19,8 @@ namespace Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Concretes
         IEnumerator LoadLevelAsync(string levelName)
         {
             yield return SceneManager.LoadSceneAsync(levelName);
-            ScoreManager.Instance.ClearScore();
-            GameManager.Instance.IsGameStarting = false;
             SpawnerManager.Instance.SpawnAction();
+
         }
         public void ExitGame()
         {

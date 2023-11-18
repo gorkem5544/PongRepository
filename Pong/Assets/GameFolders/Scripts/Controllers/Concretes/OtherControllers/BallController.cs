@@ -1,40 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Abstracts;
-using Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.EnemyControllers;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Concretes;
-using Unity.Burst.Intrinsics;
-using Unity.Mathematics;
+using Assembly_CSharp.Assets.GameFolders.Scripts.Movements.Abstracts;
+using Assembly_CSharp.Assets.GameFolders.Scripts.Movements.Concretes;
+using Assembly_CSharp.Assets.GameFolders.Scripts.ScriptableObjects.Concretes.OtherScriptableObjects;
 using UnityEngine;
 namespace Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.OtherControllers
 {
     public class BallController : MonoBehaviour, IBallController
     {
+        [SerializeField] BallSettings _ballSettings;
+        public BallSettings BallSettings => _ballSettings;
+        Rigidbody2D _rigidbody2D;
+        public Rigidbody2D Rigidbody2D => _rigidbody2D;
+        IBallBouncing _ballBouncing;
 
-        public Rigidbody2D Rigidbody2D { get; set; }
         private void Awake()
         {
-            Rigidbody2D = GetComponent<Rigidbody2D>();
+            _rigidbody2D = GetComponent<Rigidbody2D>();
+            _ballBouncing = new BallBouncing(this);
         }
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            IPlayerController playerController = other.collider.GetComponent<IPlayerController>();
-            IEnemyController enemyController = other.collider.GetComponent<IEnemyController>();
+            ICharacterController _characterController = other.collider.GetComponent<ICharacterController>();
+            ParticleManager.Instance.BallHitParticleMethod(transform.position);
 
-            Vector2 hitPosition = transform.position;
-            ParticleManager.Instance.BallHitParticleMethod(hitPosition);
-            if (playerController != null)
-            {
-                float directionVertical = (transform.position.y - playerController.transform.position.y) / other.collider.bounds.extents.y;
-                Rigidbody2D.AddForce(new Vector2(directionVertical, directionVertical) * 100f);
-            }
-            if (enemyController != null)
-            {
-                float directionVertical = (transform.position.y - enemyController.transform.position.y) / other.collider.bounds.extents.y;
-                Rigidbody2D.AddForce(new Vector2(-directionVertical, directionVertical) * 100f);
-            }
+            _ballBouncing.GetReference(_characterController, other);
+            _ballBouncing.BoundingAction();
         }
+
+
     }
 
 }

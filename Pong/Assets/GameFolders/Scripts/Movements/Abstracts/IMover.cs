@@ -4,9 +4,16 @@ using UnityEngine;
 
 namespace Assembly_CSharp.Assets.GameFolders.Scripts.Movements.Abstracts
 {
-    public interface IMover
+    public interface IPlayerMover : IMoveUpdate, IMoveFixedUpdate
     {
-        void MoveTick(float direction, float moveSpeed);
+    }
+    public interface IMoveUpdate
+    {
+        void MoveUpdate();
+    }
+    public interface IMoveFixedUpdate
+    {
+        void FixedUpdate();
     }
 
 }

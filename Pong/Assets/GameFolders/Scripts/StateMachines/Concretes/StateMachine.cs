@@ -12,6 +12,10 @@ namespace Assembly_CSharp.Assets.GameFolders.Scripts.StateMachines.Concretes
         List<StateTransition> _anyStateTransitions = new List<StateTransition>();
 
         IState _currentState;
+        /// <summary>
+        /// Oyunu ilk Stateini bu method sayesinde başlatıyoruz 
+        /// </summary>
+
         public void SetState(IState state)
         {
             if (_currentState == state)

@@ -9,15 +9,22 @@ namespace Assembly_CSharp.Assets.GameFolders.Scripts.Combats.Concretes
 {
     public class LaunchingBall : ILaunchingBall
     {
-        Rigidbody2D _rigidbody2D;
-        public LaunchingBall(IBallController ballController)
+
+        IBallController _ballController;
+        public LaunchingBall(IPlayerController playerController)
         {
-            _rigidbody2D = ballController.Rigidbody2D;
+            _ballController = playerController.BallController;
         }
         public void LaunchBallAction()
         {
-            _rigidbody2D.AddForce(new Vector2(100, 25));
+            _ballController.Rigidbody2D.AddForce(new Vector2(_ballController.BallSettings.MoveSpeed * 35, RandomYVelocity()));
         }
+        private float RandomYVelocity()
+        {
+            float randomY = Random.Range(-25, 25);
+            return randomY;
+        }
+
     }
 
 }

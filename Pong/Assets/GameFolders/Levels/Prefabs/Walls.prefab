@@ -44,6 +44,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall Top
       objectReference: {fileID: 0}
+    - target: {fileID: 4015343517649304568, guid: 143687d3ed0ba274598d9c5718bae4b8, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6303576674646356475, guid: 143687d3ed0ba274598d9c5718bae4b8, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -54,7 +58,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6303576674646356475, guid: 143687d3ed0ba274598d9c5718bae4b8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.5
+      value: 4.141
       objectReference: {fileID: 0}
     - target: {fileID: 6303576674646356475, guid: 143687d3ed0ba274598d9c5718bae4b8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -106,6 +110,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall Down
       objectReference: {fileID: 0}
+    - target: {fileID: 4015343517649304568, guid: 143687d3ed0ba274598d9c5718bae4b8, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6303576674646356475, guid: 143687d3ed0ba274598d9c5718bae4b8, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -116,7 +124,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6303576674646356475, guid: 143687d3ed0ba274598d9c5718bae4b8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.5
+      value: -4.89
       objectReference: {fileID: 0}
     - target: {fileID: 6303576674646356475, guid: 143687d3ed0ba274598d9c5718bae4b8, type: 3}
       propertyPath: m_LocalPosition.z

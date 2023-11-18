@@ -2,28 +2,44 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Abstracts;
-using Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.OtherControllers;
+using Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Abstracts;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Concretes;
-using Unity.Mathematics;
+using Assembly_CSharp.Assets.GameFolders.Scripts.Movements.Abstracts;
+using Assembly_CSharp.Assets.GameFolders.Scripts.Movements.Concretes;
+using Assembly_CSharp.Assets.GameFolders.Scripts.ScriptableObjects.Concretes.EnemyScriptableObjects;
 using UnityEngine;
 namespace Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.EnemyControllers
 {
     public class EnemyController : MonoBehaviour, IEnemyController
     {
-        BallController _ballController;
-        [SerializeField] float _aiSpeed;
+        [SerializeField] EnemySettings _enemySettings;
+        public EnemySettings EnemySettings => _enemySettings;
+
+        private IScoreManager _enemyScoreManager;
+        public IScoreManager EnemyScoreManager => _enemyScoreManager;
+
+        IBallController _ballController;
+        public IBallController BallController => _ballController;
+
+        const int EnemyInfo = -1;
+        public int Info => EnemyInfo;
+
+        IEnemyMover _enemyMover;
+
+
         private void Awake()
         {
+            _enemyScoreManager = new ScoreManager();
             _ballController = SpawnerManager.Instance.NewBallController;
+            _enemyMover = new EnemyMove(this);
         }
         private void Update()
         {
-            Vector3 newPosition = transform.position;
-            float newPos = _ballController.transform.position.y;
-            float Ai = math.lerp(newPosition.y, _ballController.transform.position.y, _aiSpeed * Time.deltaTime);
-            newPosition.y = Ai;
-            float yBoundary = Math.Clamp(newPosition.y, -3, 3);
-            transform.position = new Vector2(transform.position.x, yBoundary);
+            _enemyMover.MoveUpdate();
+        }
+        private void FixedUpdate()
+        {
+            _enemyMover.FixedUpdate();
         }
     }
 
