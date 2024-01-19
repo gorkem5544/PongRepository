@@ -5,6 +5,7 @@ using Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.EnemyCont
 using Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.OtherControllers;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.PlayerControllers;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Abstracts;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Concretes
@@ -31,7 +32,9 @@ namespace Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Concretes
         public void SpawnAction()
         {
             NewBallController = Instantiate(_ballController, GetPosition(_ballStartingPosition), Quaternion.identity);
+
             NewPlayerController = Instantiate(_playerController, GetPosition(_playerStartingPosition), Quaternion.identity);
+            NewPlayerController.transform.GetComponent<NetworkObject>().Spawn();
             NewEnemyController = Instantiate(_enemyController, GetPosition(_enemyStartingPosition), Quaternion.identity);
         }
 

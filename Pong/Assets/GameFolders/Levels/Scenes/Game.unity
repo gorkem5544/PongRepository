@@ -244,10 +244,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1920205250988575845, guid: f2077541e131cec4babaac3d1219e0f2, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1920205252075584336, guid: f2077541e131cec4babaac3d1219e0f2, type: 3}
       propertyPath: m_Name
       value: Board

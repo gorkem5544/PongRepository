@@ -9,12 +9,13 @@ using Assembly_CSharp.Assets.GameFolders.Scripts.Managers.Concretes;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Movements.Abstracts;
 using Assembly_CSharp.Assets.GameFolders.Scripts.Movements.Concretes;
 using Assembly_CSharp.Assets.GameFolders.Scripts.ScriptableObjects.Concretes.PlayerScriptableObjects;
+using Unity.Netcode;
 using UnityEngine;
 
 
 namespace Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.PlayerControllers
 {
-    public class PlayerController : MonoBehaviour, IPlayerController
+    public class PlayerController : NetworkBehaviour, IPlayerController
     {
         LaunchingBall _launchingBall;
         IPlayerMover _mover;
@@ -42,7 +43,11 @@ namespace Assembly_CSharp.Assets.GameFolders.Scripts.Controllers.Concretes.Playe
             _playerInput = new PlayerInput();
             _mover = new PlayerMover(this);
         }
-
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+            enabled = IsOwner;
+        }
         private void Update()
         {
             if (_playerInput.MouseClick && GameManager.Instance.GameState == GameManager.GameManagerStateEnum.GameStarting)
